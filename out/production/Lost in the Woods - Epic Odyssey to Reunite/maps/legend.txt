@@ -1,0 +1,18 @@
+0 grass DONE
+1 wall DONE 
+2 water DONE
+3 sand DONE
+4 dirt DONE
+5 tree DONE
+6 apple tree full 
+7 apple tree half 
+8 apple tree empty 
+9 apple tree full dirt 
+10 apple tree half dirt 
+11 apple tree empty dirt 
+12 tree dirt DONE
+
+
+ <tileset firstgid="7" source="../../../../../apple_tree_empty-dirt.tsx"/> 
+	
+ <tileset firstgid="9" source="../../../../../apple_tree_full.tsx"/>
