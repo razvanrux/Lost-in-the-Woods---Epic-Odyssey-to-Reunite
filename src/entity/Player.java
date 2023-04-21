@@ -13,6 +13,8 @@ public class Player extends entity{
     KeyHandler keyH;
     public final int screenX;
     public final int screenY;
+    int Common_Key=0;
+
 
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
@@ -25,7 +27,8 @@ public class Player extends entity{
         solid.y=16;
         solid.width=32;
         solid.height=32;
-
+        solidAreaDefaultX= solid.x;
+        solidAreaDefaultY= solid.y;
         setDefaultValues();
         getPlayerImage();
     }
@@ -105,6 +108,10 @@ public class Player extends entity{
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
+        //Check the collision with the objects
+        int objIndex = gp.cChecker.checkObject(this, true);
+        pickupObject(objIndex);
+
         //Collision is false, the player can freely move
         if (!collisionOn)
         {
@@ -162,6 +169,35 @@ public class Player extends entity{
             spriteCounter=0;
         }
         //by making the spriteCounter hit 20 we change the image once per 1/3 second (0.33)
+    }
+    public void pickupObject(int i)
+    {
+        if (i!=999)
+        {
+            String objectName = gp.obj[i].name;
+
+            switch (objectName) {
+                case "Common Key":
+                    Common_Key++;
+                    System.out.println();
+                    System.out.println("Picked up a Common Key!");
+                    System.out.println("Common Key count: "+Common_Key);
+                    gp.obj[i]=null;
+                    break;
+                case "Common Chest":
+                    break;
+                case "Common Lock":
+                    if (Common_Key>0)
+                    {
+                        gp.obj[i]=null;
+                        Common_Key--;
+                        System.out.println();
+                        System.out.println("Common Key used!");
+                        System.out.println("Common Key count: "+Common_Key);
+                    }
+                    break;
+            }
+        }
     }
     public void draw(Graphics2D g2)
     {

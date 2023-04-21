@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import main.object.MasterObject;
 import main.tile.TileManager;
 
 import javax.swing.*;
@@ -37,6 +38,9 @@ public class GamePanel extends JPanel implements Runnable{ //inherits JPanel
     Thread gameThread;
     public Player player = new Player(this,keyH);
     public CollisionChecker cChecker= new CollisionChecker(this);
+    public AssetSet aSet = new AssetSet(this);
+    public MasterObject obj[] = new MasterObject[10]; //the number of slots reserved for the assets you can see ingame
+    //NOTE! This also represents how many objects can be seen on the screen at the same time!
 
 
     public GamePanel()
@@ -47,7 +51,10 @@ public class GamePanel extends JPanel implements Runnable{ //inherits JPanel
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
-
+    public void SetupGame()
+    {
+        aSet.setObject();
+    }
     public void startGameThread()
     {
         gameThread = new Thread(this);
@@ -78,7 +85,7 @@ public class GamePanel extends JPanel implements Runnable{ //inherits JPanel
 
             if (timer>=1000000000)
             {
-                System.out.println("FPS:" +drawCount);
+                //System.out.println("FPS:" +drawCount);
                 drawCount=0;
                 timer=0;
             }
@@ -112,8 +119,22 @@ public class GamePanel extends JPanel implements Runnable{ //inherits JPanel
     {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g; //converting graphics to 2D
+
+        //TILES
         tileM.draw(g2);
+
+        //OBJECTS
+        for (int i=0;i< obj.length;i++)
+        {
+            if (obj[i]!= null) //When the objects are not null, then we draw it! - or get the nullpointer error
+            {
+                obj[i].draw(g2, this);
+            }
+        }
+
+        //PLAYER
         player.draw(g2);
+
         g2.dispose();
     }
 }

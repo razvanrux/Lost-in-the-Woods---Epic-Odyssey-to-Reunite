@@ -1,7 +1,7 @@
 /* Lost in the Woods - Epic Odyssey to Reunite
 Author: Razvan Ruxandari
-Number of days worked: 10
-Actual time spent coding: 23
+Number of days worked: 11
+Actual time spent coding: 26
 */
 package main;
 
@@ -24,7 +24,7 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
+        gamePanel.SetupGame();
         gamePanel.startGameThread();
     }
 }

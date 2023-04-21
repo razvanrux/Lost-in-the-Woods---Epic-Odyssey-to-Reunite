@@ -110,4 +110,174 @@ public class CollisionChecker {
                 break;
         }
     }
+
+    public int checkObject(entity entity, boolean player)
+    {
+        int index=999;
+        for (int i=0; i<=gp.obj.length-1;i++)
+        {
+            if (gp.obj[i] != null )
+            {
+                // Selecting the entity's solid area POS
+                entity.solid.x= entity.worldX + entity.solid.x;
+                entity.solid.y= entity.worldY + entity.solid.y;
+
+                // Selecting the specific object's area POS
+                gp.obj[i].solidArea.x=gp.obj[i].worldX+gp.obj[i].solidArea.x;
+                gp.obj[i].solidArea.y=gp.obj[i].worldY+gp.obj[i].solidArea.y;
+
+                switch(entity.direction)
+                {
+                    case "up":
+                        entity.solid.y -= entity.speed;
+                        //this if function checks when the two rectangles intersect
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                    case "up-right":
+                        entity.solid.y -= entity.speed;
+                        entity.solid.x += entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                    case "up-left":
+                        entity.solid.y -= entity.speed;
+                        entity.solid.x -= entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+
+                        }
+                        break;
+
+                    case "down":
+                        entity.solid.y += entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                    case "down-right":
+                        entity.solid.y += entity.speed;
+                        entity.solid.x += entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                    case "down-left":
+                        entity.solid.y += entity.speed;
+                        entity.solid.x -= entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                    case "left":
+                        entity.solid.x -= entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                    case "right":
+                        entity.solid.x += entity.speed;
+                        if (entity.solid.intersects(gp.obj[i].solidArea))
+                        {
+                            //if the object has collision then this sets it to true
+                            if (gp.obj[i].collision == true)
+                            {
+                                entity.collisionOn = true;
+                            }
+                            //we're only allowing the player to use the items, NPCs, enemies etc. are not able to do so
+                            if (player==true)
+                            {
+                                index = i;
+                            }
+                        }
+                        break;
+
+                }
+                //we're resetting the values so they don't just increase everytime
+                entity.solid.x=entity.solidAreaDefaultX;
+                entity.solid.y=entity.solidAreaDefaultY;
+                gp.obj[i].solidArea.x=gp.obj[i].solidAreaDefaultX;
+                gp.obj[i].solidArea.y=gp.obj[i].solidAreaDefaultY;
+            }
+        }
+        return index;
+    }
 }
