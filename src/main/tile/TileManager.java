@@ -1,6 +1,7 @@
 package main.tile;
 
 import main.GamePanel;
+import main.object.MasterObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,99 +13,135 @@ import java.io.InputStreamReader;
 public class TileManager {
     GamePanel gp;
     public tile[] tile;
-    public int[][] mapTileNumber;
+    public int[][][] mapTileNumber;
+    public static int currentMap=0;
+    public final int maxMaps = 5; //Number
 
     public TileManager(GamePanel gp)
     {
         this.gp=gp;
-        tile = new tile[14]; //the max amount of tiles we can have - will increase it later ofc
-        mapTileNumber= new int[gp.maxWorldCol][gp.maxWorldRow];
+        tile = new tile[20]; //the max amount of tiles we can have - will increase it later ofc
+        mapTileNumber= new int[maxMaps][gp.maxWorldCol][gp.maxWorldRow];
         getTileImage();
-        loadMap("/maps/1_TUTORIAL.txt");
+       // loadMap("/maps/level4.txt");
+        loadAllMaps();
     }
+
+    public static int getMapID()
+    {
+        return currentMap;
+    }
+
+    public static void setMapID(int set)
+    {
+        currentMap=set;
+    }
+
+
+
     public void getTileImage()
     {
         try{
+            TileSet tiles = new TileSet(ImageIO.read(TileManager.class.getResourceAsStream("/tiles/Untitled.png")));
+
             tile[0]=new tile();
-            tile[0].image= ImageIO.read(getClass().getResourceAsStream("/tiles/grass.png"));
+            tile[0].image= tiles.crop(0,0);
 
             tile[1]=new tile();
-            tile[1].image= ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
+            tile[1].image=tiles.crop(1,0);
             tile[1].collision=true;
 
             tile[2]=new tile();
-            tile[2].image= ImageIO.read(getClass().getResourceAsStream("/tiles/water.png"));
+            tile[2].image= tiles.crop(2,0);
             tile[2].collision=true;
 
             tile[3]=new tile();
-            tile[3].image= ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
+            tile[3].image= tiles.crop(3,0);
 
             tile[4]=new tile();
-            tile[4].image= ImageIO.read(getClass().getResourceAsStream("/tiles/dirt.png"));
+            tile[4].image= tiles.crop(4,0);
 
             tile[5]=new tile();
-            tile[5].image= ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
+            tile[5].image= tiles.crop(5,0);
             tile[5].collision=true;
 
             tile[6]=new tile();
-            tile[6].image= ImageIO.read(getClass().getResourceAsStream("/tiles/apple_tree_full.png"));
+            tile[6].image= tiles.crop(0,1);
             tile[6].collision=true;
 
             tile[7]=new tile();
-            tile[7].image= ImageIO.read(getClass().getResourceAsStream("/tiles/apple_tree_half.png"));
+            tile[7].image= tiles.crop(1,1);
             tile[7].collision=true;
 
             tile[8]=new tile();
-            tile[8].image= ImageIO.read(getClass().getResourceAsStream("/tiles/apple_tree_empty.png"));
+            tile[8].image= tiles.crop(2,1);
             tile[8].collision=true;
 
             tile[9]=new tile();
-            tile[9].image= ImageIO.read(getClass().getResourceAsStream("/tiles/apple_tree_full-dirt.png"));
+            tile[9].image= tiles.crop(3,1);
             tile[9].collision=true;
 
             tile[10]=new tile();
-            tile[10].image= ImageIO.read(getClass().getResourceAsStream("/tiles/apple_tree_half-dirt.png"));
+            tile[10].image= tiles.crop(4,1);
             tile[10].collision=true;
 
             tile[11]=new tile();
-            tile[11].image= ImageIO.read(getClass().getResourceAsStream("/tiles/apple_tree_empty-dirt.png"));
+            tile[11].image= tiles.crop(5,1);
             tile[11].collision=true;
 
             tile[12]=new tile();
-            tile[12].image= ImageIO.read(getClass().getResourceAsStream("/tiles/tree-dirt.png"));
+            tile[12].image= tiles.crop(0,2);
             tile[12].collision=true;
 
             tile[13]=new tile();
-            tile[13].image= ImageIO.read(getClass().getResourceAsStream("/tiles/gravel.png"));
+            tile[13].image= tiles.crop(1,2);
             tile[13].collision=false;
+
+            tile[14]=new tile();                          //LAVA
+            tile[14].image= tiles.crop(2,2);
+            tile[14].collision=true;
+
+            tile[15]=new tile();                          //TELEPORTER
+            tile[15].image= tiles.crop(3,2);
+            tile[15].collision=false;
+
+            tile[16]=new tile();                          //SPAWNER
+            tile[16].image= tiles.crop(4,2);
+            tile[16].collision=false;
+
+            tile[17]=new tile();                          //WOOD
+            tile[17].image= tiles.crop(5,2);
+            tile[17].collision=false;
 
         }catch(IOException e){
             e.printStackTrace();
         }
     }
-    public void loadMap(String FilePath)
+    public void loadMap(String FilePath, int currentMap)
         {
+            System.out.println(FilePath);
+            MasterObject.load();
         try{
             InputStream is = getClass().getResourceAsStream(FilePath);
             BufferedReader br = new BufferedReader(new InputStreamReader((is)));
             int col=0;
             int row=0;
-            while (col<gp.maxWorldCol && row< gp.maxWorldRow)
-            {
-                String line = br.readLine(); //reading a line from the text
-                while (col<gp.maxWorldCol)
+                while (col<gp.maxWorldCol && row< gp.maxWorldRow)
                 {
-                    String[] numbers = line.split(" "); //extracting number by number, skipping the spaces
-                    int num = Integer.parseInt(numbers[col]); // string <-> int
-                    mapTileNumber[col][row] = num;
-                    col++;
+                    String line = br.readLine(); //reading a line from the text
+                    while (col<gp.maxWorldCol)
+                    {
+                        String[] numbers = line.split(" "); //extracting number by number, skipping the spaces
+                        int num = Integer.parseInt(numbers[col]); // string <-> int
+                        mapTileNumber[currentMap][col][row] = num;
+                        col++;
+                    }
+                    if (col== gp.maxWorldCol)
+                    {
+                        col=0;
+                        row++;
+                    }
                 }
-                if (col== gp.maxWorldCol)
-                {
-                    col=0;
-                    row++;
-                }
-            }
             br.close();
         }
 
@@ -112,6 +149,14 @@ public class TileManager {
         {
         }
     }
+
+    public void loadAllMaps() {
+        for (int ceva = 0; ceva<maxMaps;ceva++)
+        {
+            loadMap("/maps/level"+ceva+".txt", ceva);
+        }
+    }
+
     public void draw(Graphics2D g2)
     {
         int worldCol=0;
@@ -119,7 +164,7 @@ public class TileManager {
         //making the camera work - the player is stuck in the center but the world moves around him
         while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow)
         {
-            int tileNumb = mapTileNumber[worldCol][worldRow];
+            int tileNumb = mapTileNumber[getMapID()][worldCol][worldRow];
             int worldx= worldCol*gp.tileSize;
             int worldy=worldRow*gp.tileSize;
             int screenX=worldx-gp.player.worldX + gp.player.screenX;
