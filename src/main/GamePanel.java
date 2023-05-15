@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
     public final int maxWorldRow = 100;
 
 
-    //FPS will be 60 so my shit $2 laptop can run it
+    //FPS will be 60 so my $2 laptop can run it - NEVERMIND I GOT A NEW ONE HEHEH
     int FPS = 60;
 
 
@@ -38,9 +38,12 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
     public Player player = new Player(this,keyH);
     public CollisionChecker cChecker= new CollisionChecker(this);
     public AssetSet aSet = new AssetSet(this);
-    public MasterObject obj[] = new MasterObject[20]; //the number of slots reserved for the assets you can see ingame
+    public MasterObject obj[][] = new MasterObject[4][20]; //the number of slots reserved for the assets you can see ingame
     //NOTE! This also represents how many objects can be seen on the screen at the same time!
 
+
+    //UI
+    public UI ui = new UI(this);
 
     //SOUNDS
     Sound sound = new Sound();
@@ -48,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
     Sound walk_sounds = new Sound();
     //We need more Sound objects to play both music and effects at the same time
 
-
+    public int helper=0; //used for UI
     public GamePanel()
     {
 
@@ -71,7 +74,14 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
 
         gameThread.start();
     }
-
+    public int gethelper() //also used for UI
+    {
+            return helper;
+    }
+    public void setHelper(int cv) //you guessed it - still for UI
+    {
+        helper=cv;
+    }
     @Override
     public void run() //creating a game loop
     {
@@ -99,6 +109,12 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
                 //System.out.println("X=" +Player.worldX);
               //  System.out.println("Y=" +Player.worldY);
                // System.out.println("MapID: " +TileManager.getMapID());
+                System.out.println(helper);
+                helper++;
+                if (helper==60)
+                {
+                    helper=0;
+                }
                 drawCount=0;
                 timer=0;
             }
@@ -140,16 +156,19 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
         tileM.draw(g2);
 
         //OBJECTS
-        for (int i=0;i< obj.length;i++)
+        for (int i=0;i< obj[TileManager.getMapID()].length;i++)
         {
-            if (obj[i]!= null) //When the objects are not null, then we draw it! - or get the nullpointer error
-            {
-                obj[i].draw(g2, this);
-            }
+                if (obj[TileManager.getMapID()][i]!=null) //When the objects are not null, then we draw it! - or get the nullpointer error
+                {
+                    obj[TileManager.getMapID()][i].draw(g2, this);
+                }
         }
 
         //PLAYER
         player.draw(g2);
+
+        //UI
+        ui.drawImage(g2, itemChecker());
 
         g2.dispose();
     }
@@ -177,11 +196,16 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
        // System.out.println("Check= "+check);
         if (check != -1 )
         {
+            stopMusic(TileManager.getMapID());
             TileManager.setMapID(check);
-            sound.stop();
             setMusic(check);
         }
     }
+    public int itemChecker()
+    {
+        return Player.verify;
+    }
+
     public int playerIsInCertainLocation() {
     //    System.out.println("Player Check");
         if (TileManager.getMapID()==0)
@@ -196,19 +220,51 @@ public class GamePanel extends JPanel implements Runnable , Observer{ //inherits
         }
         else if (TileManager.getMapID()==1)
         {
-
+            if (Player.worldX>=85*tileSize && Player.worldX<=86*tileSize && Player.worldY>=22*tileSize && Player.worldY<=24*tileSize)
+            {
+                Player.setX(77*tileSize);
+                Player.setY(92*tileSize);
+                return 2;
+            }
+            else if (Player.worldX>=14*tileSize && Player.worldX<=16*tileSize && Player.worldY>=21*tileSize && Player.worldY<=23*tileSize)
+            {
+                Player.setX(39 * tileSize);
+                Player.setY(92 * tileSize);
+                return 3;
+            }
+            else if (Player.worldX>=14*tileSize && Player.worldX<=16*tileSize && Player.worldY>=33*tileSize && Player.worldY<=35*tileSize)
+            {
+                Player.setX(13 * tileSize);
+                Player.setY(92 * tileSize);
+                return 4;
+            }
         }
         else if (TileManager.getMapID()==2)
         {
-
+            if (Player.worldX>=13*tileSize && Player.worldX<=15*tileSize && Player.worldY>=7*tileSize && Player.worldY<=9*tileSize)
+            {
+                Player.setX(13*tileSize);
+                Player.setY(11*tileSize);
+                return 1;
+            }
         }
         else if (TileManager.getMapID()==3)
         {
-
+            if (Player.worldX>=85*tileSize && Player.worldX<=86*tileSize && Player.worldY>=8*tileSize && Player.worldY<=9*tileSize)
+            {
+                Player.setX(13*tileSize);
+                Player.setY(11*tileSize);
+                return 1;
+            }
         }
         else if (TileManager.getMapID()==4)
         {
-
+            if (Player.worldX>=76*tileSize && Player.worldX<=78*tileSize && Player.worldY>=9*tileSize && Player.worldY<=10*tileSize)
+            {
+                Player.setX(13*tileSize);
+                Player.setY(11*tileSize);
+                return 1;
+            }
         }
         return -1;
     }

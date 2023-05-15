@@ -32,7 +32,7 @@ public class MasterObject {
 
     // Load the assets
 
-    public static void load()
+    public static void load()   
     {
         try {
             Sheet keys_lock = new Sheet (ImageIO.read(MasterObject.class.getResourceAsStream("/objects/key_lock.png")));

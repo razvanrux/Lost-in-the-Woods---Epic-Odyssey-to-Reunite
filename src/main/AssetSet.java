@@ -11,17 +11,25 @@ public class AssetSet {
     }
     public void setObject()
     {
-        gp.obj[0]= new One_Key();
-        gp.obj[0].worldX = 46 * gp.tileSize;
-        gp.obj[0].worldY = 83 * gp.tileSize;
+        gp.obj[0][0]= new One_Key();
+        gp.obj[0][0].worldX = 46 * gp.tileSize;
+        gp.obj[0][0].worldY = 83 * gp.tileSize;
 
-        gp.obj[1]= new One_Lock();
-        gp.obj[1].worldX = 43 * gp.tileSize;
-        gp.obj[1].worldY = 28 * gp.tileSize;
+        gp.obj[0][1]= new One_Lock();
+        gp.obj[0][1].worldX = 43 * gp.tileSize;
+        gp.obj[0][1].worldY = 28 * gp.tileSize;
 
-        gp.obj[2]= new One_Chest();
-        gp.obj[2].worldX = 37 * gp.tileSize;
-        gp.obj[2].worldY = 83 * gp.tileSize;
+        gp.obj[1][0]= new One_Key();
+        gp.obj[1][0].worldX = 46 * gp.tileSize;
+        gp.obj[1][0].worldY = 83 * gp.tileSize;
+
+        gp.obj[1][1]= new One_Lock();
+        gp.obj[1][1].worldX = 43 * gp.tileSize;
+        gp.obj[1][1].worldY = 28 * gp.tileSize;
+
+        //gp.obj[2]= new One_Chest();
+        //gp.obj[2].worldX = 37 * gp.tileSize;
+       // gp.obj[2].worldY = 83 * gp.tileSize;
 
       //  gp.obj[3]= new One_Head();
        // gp.obj[3].worldX = 40 * gp.tileSize;

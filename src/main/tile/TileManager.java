@@ -25,6 +25,7 @@ public class TileManager {
         getTileImage();
        // loadMap("/maps/level4.txt");
         loadAllMaps();
+        currentMap=0;
     }
 
     public static int getMapID()
@@ -119,7 +120,7 @@ public class TileManager {
     }
     public void loadMap(String FilePath, int currentMap)
         {
-            System.out.println(FilePath);
+            //System.out.println(FilePath);
             MasterObject.load();
         try{
             InputStream is = getClass().getResourceAsStream(FilePath);

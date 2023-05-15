@@ -1,7 +1,7 @@
 /* Lost in the Woods - Epic Odyssey to Reunite
 Author: Razvan Ruxandari
-Number of days worked: 15
-Actual time spent: 42da
+Number of days worked: 21
+Actual time spent: 57
 Game's official OST: https://www.youtube.com/playlist?list=PLN8jvvZDAX7wY90-ux0yyEAl5XBNDA8Pf
 */
 package main;
