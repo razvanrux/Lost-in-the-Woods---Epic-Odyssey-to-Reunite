@@ -2,8 +2,10 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.UI;
 import main.obs.LocationObserver;
 import main.obs.Observer;
+import main.tile.TileManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,6 +20,10 @@ public class Player extends entity implements LocationObserver {
     public final int screenX;
     public final int screenY;
 
+    //Item checker
+    public static int verify=0;
+
+    UI ui = new UI(gp);
 
 
     //HELMET
@@ -113,6 +119,9 @@ four_boots_right1, four_boots_right2; //kappa
 
 
     int Common_Key=0;
+    int Uncommon_Key=0;
+    int Rare_Key=0;
+    int Ancient_Key=0;
     int aj=0;
 
     int one_h, one_c, one_b, two_h, two_c, two_b, three_h, three_c, three_b, four_h, four_c, four_b=0;
@@ -134,6 +143,7 @@ four_boots_right1, four_boots_right2; //kappa
         solidAreaDefaultY= solid.y;
         setDefaultValues();
         getPlayerImage();
+        //UI ui = new UI(gp);
     }
 
     public static void setX(int cv)
@@ -147,8 +157,8 @@ four_boots_right1, four_boots_right2; //kappa
 
     public void setDefaultValues()
     {
-        worldX = 910;
-        worldY = 4300;
+        worldX = 16*gp.tileSize;
+        worldY = 90*gp.tileSize-10;
         speed=10;                                 //6 //SPEEDSET
         direction="stand";
     }
@@ -414,27 +424,51 @@ four_boots_right1, four_boots_right2; //kappa
         }
         //by making the spriteCounter hit 20 we change the image once per 1/3 second (0.33)
     }
+    public int getCommon_Key()
+    {
+        return Common_Key;
+    }
+    public int getUncommon_Key()
+    {
+        return Uncommon_Key;
+    }
+    public int getRare_Key()
+    {
+        return Rare_Key;
+    }
+    public int getAncient_Key()
+    {
+        return Ancient_Key;
+    }
+
+
     public void pickupObject(int i)
     {
 
         if (i!=999)
         {
-            String objectName = gp.obj[i].name;
+            String objectName = gp.obj[TileManager.getMapID()][i].name;
 
             switch (objectName) {
                 case "Common Key":
+                    gp.setHelper(0);
+                    gp.playEffect(21);
                     Common_Key++;
+                    verify=1;
                     System.out.println();
                     System.out.println("Picked up a Common Key!");
                     System.out.println("Common Key count: "+Common_Key);
-                    gp.obj[i]=null;
+                    gp.obj[TileManager.getMapID()][i]=null;
                     break;
                 case "Common Chest":
                     break;
                 case "Common Lock":
+                    gp.setHelper(0);
                     if (Common_Key>0)
                     {
-                        gp.obj[i]=null;
+                        gp.playEffect(20);
+                        gp.obj[TileManager.getMapID()][i]=null;
+                        verify=2;
                         Common_Key--;
                         System.out.println();
                         System.out.println("Common Key used!");
@@ -442,7 +476,9 @@ four_boots_right1, four_boots_right2; //kappa
                     }
                     else
                     {
+                        gp.setHelper(0);
                         aj++;
+                        verify=3;
                         if (aj==10) {
                             System.out.println("You need a Common Key to open this Lock!");
                         }
@@ -452,6 +488,59 @@ four_boots_right1, four_boots_right2; //kappa
                         }
                     }
                     break;
+
+                case "Uncommon Key":
+                    gp.setHelper(0);
+                    gp.playEffect(21);
+                    Uncommon_Key++;
+                    verify=4;
+                    System.out.println();
+                    System.out.println("Picked up a Common Key!");
+                    System.out.println("Common Key count: "+Common_Key);
+                    gp.obj[TileManager.getMapID()][i]=null;
+                    break;
+
+                case "Uncommon Lock":
+                    gp.setHelper(0);
+                    if (Uncommon_Key>0)
+                    {
+                        gp.playEffect(20);
+                        gp.obj[TileManager.getMapID()][i]=null;
+                        verify=5;
+                        Uncommon_Key--;
+                        System.out.println();
+                        System.out.println("Uncommon Key used!");
+                        System.out.println("Uncommon Key count: "+Uncommon_Key);
+                    }
+                    else
+                    {
+                        gp.setHelper(0);
+                        aj++;
+                        verify=3;
+                        if (aj==10) {
+                            System.out.println("You need a Common Key to open this Lock!");
+                        }
+                        if (aj==100)
+                        {
+                            aj=0;
+                        }
+                    }
+                    break;
+
+                case "Rare Key":
+                    break;
+
+                case "Rare Lock":
+                    break;
+
+                case "Ancient Key":
+                    break;
+
+                case "Ancient Lock":
+                    break;
+
+
+
 
                 case "Leather Helmet":
                     if (four_h==1 || three_h==1 || two_h==1 || one_h==1)
@@ -1485,6 +1574,7 @@ four_boots_right1, four_boots_right2; //kappa
      // System.out.println("playerMoved");
         notifyObservers();
     }
+
 
     public void notifyObservers() {
         //System.out.println("notifyObservers");
